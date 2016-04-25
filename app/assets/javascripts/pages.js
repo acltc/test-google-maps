@@ -8,6 +8,48 @@ function initMap() {
   document.getElementById('submit').addEventListener('click', function() {
     geocodeAddress(geocoder, map);
   });
+
+  var places = [
+    {address: "Chicago, IL", description: "The windy city!"},
+    {address: "2413 S Western Ave, Chicago, IL", description: "An apartment!"}
+  ];
+  places.forEach(function(place) {
+    geocoder.geocode({'address': place.address}, function(results, status) {
+      if (status === google.maps.GeocoderStatus.OK) {
+        map.setCenter(results[0].geometry.location);
+        var marker = new google.maps.Marker({
+          map: map,
+          position: results[0].geometry.location
+        });
+        var infowindow = new google.maps.InfoWindow({
+          content: place.description
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+      }
+    });
+  });
+  // for (var i = 0; i < places.length; i++) {
+  //   var description = places[i].description;
+  //   geocoder.geocode({'address': places[i].address}, function(results, status) {
+  //     if (status === google.maps.GeocoderStatus.OK) {
+  //       map.setCenter(results[0].geometry.location);
+  //       var marker = new google.maps.Marker({
+  //         map: map,
+  //         position: results[0].geometry.location
+  //       });
+  //       var infowindow = new google.maps.InfoWindow({
+  //         content: description
+  //       });
+  //       marker.addListener('click', function() {
+  //         infowindow.open(map, marker);
+  //       });
+  //     } else {
+  //       console.log('Geocoder failed because: ' + status);
+  //     }
+  //   });
+  // }
 }
 
 function geocodeAddress(geocoder, resultsMap) {
